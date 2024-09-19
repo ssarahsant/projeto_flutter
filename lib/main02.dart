@@ -24,9 +24,20 @@ class Projeto01App extends StatelessWidget {
   // Metodo para construir o 1° Widget (home do app)
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      // ele irá retornar um widget da como com um texto
-      home: Text("Meu primeiro App em Flutter"),
+    return MaterialApp(
+      /* A classe Scaffold é a base para construir uma aplicação básica, composta por um header, body e footer.  
+      É uma classe que permite construir os componentes que cosntrões um tela. 
+      Para construir a tela serão usados os componentes da classe scaffold. */
+      home:  Scaffold(
+        // Aqui serão criados os componentes da tela home
+        // APPBAR é um atributo que constroe o header, nele pode usar uma nova classe
+        appBar: AppBar(
+          // Da classe AppBar está sendo utilizado os atributos de titulo, estilo e backgroud
+          title: const Text("App da Turma A", style: TextStyle(color: Colors.white)),
+          backgroundColor: const Color.fromARGB(255, 110, 109, 109),
+        ),
+      ),
     );
   }
 }
+
