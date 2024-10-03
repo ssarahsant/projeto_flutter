@@ -14,8 +14,8 @@ class Projeto01App extends StatefulWidget{
 
 class Projeto01AppState extends State<Projeto01App>{ // extendes pq e a classe pai
 
-  //constrtuor da claase , sempre vai estanciar aqui ou seja , sempre vai execuatr esse metodo primeiro
-  //seta como esses parametros em que se comportar e mapear os vaores
+//constrtuor da claase , sempre vai estanciar aqui ou seja , sempre vai execuatr esse metodo primeiro
+//seta como esses parametros em que se comportar e mapear os vaores
 
 //criando outro metodo , para construir a home
 //para criar a classe e carregar os componentes cria o widget
