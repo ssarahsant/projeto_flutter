@@ -42,7 +42,7 @@ class Projeto01AppState extends State<Projeto01App> {
             // Da classe AppBar está sendo utilizado os atributos de titulo, estilo e backgroud
             title: const Text("App da Turma A",
                 style: TextStyle(color: Colors.white)),
-            backgroundColor: const Color.fromARGB(255, 110, 109, 109),
+            backgroundColor: const Color.fromARGB(255, 179, 144, 211), // Cor de fundo
           ),
           // criação do body (um atributo do scaffold) usando a Classe
           //  Column para fazer uma alinhamento vettical dos widgets que serão construidos no body
@@ -84,7 +84,8 @@ class Projeto01AppState extends State<Projeto01App> {
               // child é uma especie de div
               child: Text('Aqui é o rodapé', textAlign: TextAlign.center),
             ),
-          )),
+          )
+        ),
     );
   }
 }

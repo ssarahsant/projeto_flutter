@@ -15,7 +15,7 @@ class Projeto01App extends StatelessWidget {
     return MaterialApp(
       title: "Exemplo navegação duas telas",
       theme: ThemeData(
-        primarySwatch: Colors.grey,
+        primarySwatch: Colors.purple,
       ),
       home: const Projeto01AppScreen(),
     );
@@ -43,7 +43,7 @@ class Projeto01AppState extends State<Projeto01AppScreen> {
           'App da Turma A',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: const Color.fromARGB(255, 132, 132, 136),
+        backgroundColor: const Color.fromARGB(255, 179, 144, 211), // Cor de fundo
       ),
       // CRIAÇÃO DO MENU HAMBURGUER
       drawer: Drawer(
@@ -52,7 +52,7 @@ class Projeto01AppState extends State<Projeto01AppScreen> {
           children: <Widget>[
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 70, 40, 180),
+                color: Color.fromARGB(255, 179, 144, 211), // Cor de fundo
               ),
               child: const Text(
                 "Menu",
@@ -126,7 +126,7 @@ class Projeto01AppState extends State<Projeto01AppScreen> {
       ),
       // Acrescentando o rodapé
       bottomNavigationBar: BottomAppBar(
-        color: const Color.fromARGB(255, 53, 52, 52), // Cor de fundo cinza claro
+        color: const Color.fromARGB(255, 179, 144, 211), // Cor de fundo
         child: const Padding(
           padding: EdgeInsets.all(16.0),
           child: Text('Aqui é o rodapé', textAlign: TextAlign.center),

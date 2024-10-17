@@ -19,17 +19,19 @@ class Projeto01AppState extends State<Projeto01App> {
 
 //criando outro metodo , para construir a home
 //para criar a classe e carregar os componentes cria o widget
-
+// inicialização das variaveis
   String texto = "Cnstruindo App da Turma";
   String localSensor = ''; // Armazena o texto do sensor
   String tipoSensor = ''; 
   String macAdress = ''; 
-  String latitude = ''; 
-  String longitude = '';
+  double? latitude; // ? indica que pode assumir um valor nulo
+  double? longitude; // ? indica que pode assumir um valor nulo
   String responsavel = ''; 
+  bool statusOperacional = true; 
   String observacao = ''; 
 
-  final TextEditingController _controller =
+// controler dos input
+  final TextEditingController _localcontroller =
       TextEditingController(); // privado //final: e uma contsante que vai defibir dps
   final TextEditingController _tipocontroller =
       TextEditingController(); // privado //final: e uma contsante que vai defibir dps
@@ -46,7 +48,7 @@ class Projeto01AppState extends State<Projeto01App> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _localcontroller.dispose();
     _tipocontroller.dispose();
     _macadresscontroller.dispose();
     _latitudecontroller.dispose();
@@ -69,6 +71,7 @@ class Projeto01AppState extends State<Projeto01App> {
           ),
           backgroundColor: const Color.fromARGB(255, 179, 144, 211), // Cor de fundo
         ),
+        
         // No Main 08 usava center no body
         // O SINGLE, serve para permitir a rolagem da tela quando acabar o espaço
         body: SingleChildScrollView(
@@ -77,11 +80,12 @@ class Projeto01AppState extends State<Projeto01App> {
           children: [
             Text(texto, style: TextStyle(fontSize: 24)),
             SizedBox(height: 20),
-            //Aqui vamos inserir a caixa de texto local de sensor
+
+            // Campo Local do sensor
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0), //Espaço
               child: TextField(
-                controller: _controller, // controlador captura o texto
+                controller: _localcontroller, // controlador captura o texto
                 decoration: InputDecoration(
                   labelText: 'Local do Sensor', // Nome do campo de digitação
                   border: OutlineInputBorder(),
@@ -93,7 +97,8 @@ class Projeto01AppState extends State<Projeto01App> {
               ),
             ),
             SizedBox(height: 20),
-            //Aqui vamos inserir a caixa de texto  tipo de sensor
+
+            // Campo tipo de sensor
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0), //Espaço
               child: TextField(
@@ -109,7 +114,8 @@ class Projeto01AppState extends State<Projeto01App> {
               ),
             ),
             SizedBox(height: 20),
-            //Aqui vamos inserir a caixa de texto  mac adress sensor
+
+            // Campo mac adress 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0), //Espaço
               child: TextField(
@@ -125,27 +131,29 @@ class Projeto01AppState extends State<Projeto01App> {
               ),
             ),
             SizedBox(height: 20),
-            //Aqui vamos inserir a caixa de texto latitude de sensor
+
+            // Campo Latitude
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0), //Espaço
               child: TextField(
-                controller: _controller, // controlador captura o texto
+                controller: _localcontroller, // controlador captura o texto
                 decoration: InputDecoration(
                   labelText: 'Latitude do Sensor', // Nome do campo de digitação
                   border: OutlineInputBorder(),
                 ),
                 maxLength: 20, //Limite de caracteres para digitação
                 onChanged: (value) {
-                  latitude = value; //Atualiza variavel ao digitar
+                  latitude = double.tryParse(value); // Converte o valor inserido para double porque é lido em string
                 },
               ),
             ),
             SizedBox(height: 20),
-            //Aqui vamos inserir a caixa de texto longitude do sensor
+
+            // Campo Logitude
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0), //Espaço
               child: TextField(
-                controller: _controller, // controlador captura o texto
+                controller: _localcontroller, // controlador captura o texto
                 decoration: InputDecoration(
                   labelText:
                       'Longitude do Sensor', // Nome do campo de digitação
@@ -153,12 +161,13 @@ class Projeto01AppState extends State<Projeto01App> {
                 ),
                 maxLength: 20, //Limite de caracteres para digitação
                 onChanged: (value) {
-                  longitude = value; //Atualiza variavel ao digitar
+                  longitude = double.tryParse(value); //Atualiza variavel ao digitar
                 },
               ),
             ),
             SizedBox(height: 20),
-            //Aqui vamos inserir a caixa de texto  resonsavel sensor
+
+            // Campo Resonsavel Sensor
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0), //Espaço
               child: TextField(
@@ -176,6 +185,26 @@ class Projeto01AppState extends State<Projeto01App> {
               ),
             ),
             SizedBox(height: 20),
+
+            // Campo status operacional
+            Padding(
+              padding: const EdgeInsetsDirectional.symmetric(horizontal: 20.0),
+              child: Row(
+                children: [
+                  Text("Status Operacional"),
+                  Switch(
+                    value: statusOperacional,
+                    onChanged: (value) {
+                      setState(() {
+                        statusOperacional = value;
+                      });
+                    }
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+
             // Campo Observação
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0), //Espaço
@@ -208,22 +237,20 @@ class Projeto01AppState extends State<Projeto01App> {
                   // ? == if e os : == else;
                 });
                 // Limpar os controller dos demais inputs
-                _controller.clear();
-                localSensor = '';
-                _controller.clear();
-                localSensor = '';
-                tipoSensor = '';
-                macAdress = '';
-                latitude = '';
-                longitude = '';
-                responsavel = '';
-                observacao = '';
+                _localcontroller.clear();
+                _tipocontroller.clear();
+                _macadresscontroller.clear();
+                _latitudecontroller.clear();
+                _longitudecontroller.clear();
+                _responsavelcontroller.clear();
+                _observacaocontroller.clear();
               }, //Adicionaremos uma funcao de botao aqui
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(200, 50),
               ),
               child: Text('Clique aqui'),
-            )
+            ),
+            SizedBox(height: 30),
           ],
         )
         ),
