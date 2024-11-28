@@ -1,99 +1,133 @@
-// Importações
-import 'package:path/path.dart'; // biblioteca para saber onde esta dentro do aplicativo
-import 'package:sqflite/sqflite.dart'; // biblioteca para usar o banco sqlite local (sem depender de conexão)
-import 'sensor_model.dart'; // importa o model
+import 'package:path/path.dart';
 
-// Classe para CRUD do banco
-// Instancia de banco de dados
+//em caso de problemas coma a biblioteca abaixo tente executar no terminal
+//flutter pub add sqflite
+import 'package:sqflite/sqflite.dart';
+import 'sensor_model.dart';
+
 class DatabaseHelper {
-  // Permite que crie omente uma instancia no banco de dados em toda a aplicação
-  // A aplicação usa o mesmo banco de dados
-  // declara final (constante) quando não sabe o valor quando compila.
-  // _.intance = nome da variavel
-  // _internal faz como que cria somente uma instancia do banco de dados
-  // static, toda vez que chamar a classe ele ve que existe a variavel e responde a _instance, ao invês de criar outra
+  //O código usa o padrão Singleton para garantir que apenas uma instância de DatabaseHelper
+  //exista durante toda a execução do aplicativo.
+  // Isso é especialmente útil para gerenciar conexões de banco de dados,
+  //evitando múltiplas conexões simultâneas que podem causar inconsistências e aumentar o uso de recursos.
+
+  //Essa linha inicializa _instance chamando o construtor privado DatabaseHelper._internal().
+  //Como é static, essa instância é compartilhada e acessível em toda a aplicação,
+  //garantindo que apenas uma instância de DatabaseHelper será criada.
+  //DatabaseHelper é o tipo da variável _instance e ela recebe a instancia criada no método _internal()
   static final DatabaseHelper _instance = DatabaseHelper._internal();
+
+  //Quando alguém cria um objeto DatabaseHelper,
+  //esse construtor é chamado, e ele sempre retorna a instância _instance.
+  //Isso impede a criação de múltiplas instâncias,
   factory DatabaseHelper() => _instance;
   DatabaseHelper._internal();
 
-  // Declaração da varivale database do tipo banco de dados, que pode ser nulo quando não foi criado ainda
+  //Resumindo as 3 linhas acima garantem que uma única instancia do BD seja criada
+
   static Database? _database;
 
-  // Varivael para o banco de dados
   static const String _databaseName = 'sensors.db';
-  // Variavel para a tabela do banco de dadso
   static const String _tableName = 'sensors';
 
-  // Inicializa o banco e retona a instancia do banco
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
   }
 
-  // Criação do método que incializa o banco, toda vez que incializar vai ver se o banco ta criado
-  // se o banco não estiver criado ele vai executar o metodo que cria o banco
-  // future = esse metodo pode demorar para responder
-  // await = espera antes de proseguir o código espera a excecução até receber uma resposta
-  // isso serve para o sistema chamar o metodo e esperar ele dar um resposta.
-  // o banco de dados pode dar uma resposta ou não, por isspo o código deve esperar para conuar executando
   Future<Database> _initDatabase() async {
-    // concatenação para achar o caminho do banco de dados
     String path = join(await getDatabasesPath(), _databaseName);
     return await openDatabase(
       path,
-      // Se o banco de dados já existe e vpcê altera a versão para um superior (da versão 1 para versão 2)
-      // o método onUpgrade é chamado, permitindo que você escreva lógica de migração para atualizar o
-      // esquema do banco de dados, sem perder o que já tinha
-      // serve para fazer uma gestão de atualizações nos campos, indica a versão quando cria novas tabelas
-      // quando a versão altera o código executa o on create
+      //Se o banco de dados já existe e você altera a versão para uma superior (por exemplo, de 1 para 2),
+      //o método onUpgrade é chamado, permitindo que você escreva lógica de migração para atualizar o esquema do banco de dados sem perder
       version: 1,
-      // _oncreate será executado caso não exista as tabelas criadas
-      // chama o metodo que fará a criação
+      //_onCreate será executado caso não exista as tabelas criadas.
       onCreate: _onCreate,
     );
   }
 
-  // Metodo para criar as tabelas no banco de dados local
-  // Instruções sql direto no banco de dados
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE $_tableName (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         tipo TEXT,
         mac_address TEXT,
-        latitute REAL,
+        latitude REAL,
         longitude REAL,
-        localizacao TEXT NOT NULL,
+        localizacao TEXT NOT NULL, 
         responsavel TEXT,
-        unidade de medida TEXT,
+        unidade_medida TEXT,
         status_operacional INTEGER,
         observacao TEXT
       )
     ''');
   }
 
-  // CREATE
-  // Metodo para inserir um sensor no banco de dados
+  // Inserir um sensor no banco de dados
   Future<int> insertSensor(Map<String, dynamic> sensorData) async {
     Database db = await database;
     return await db.insert(_tableName, sensorData);
   }
 
-  // UPDATE
-  // Metódo para alterar um sensor no banco de dados
-  Future<int> updateSensor(Map<String, dynamic> sensorData, int id) async {
-    Database db = await database;
-    return await db.update(
-      _tableName,
-      sensorData,
-      where: 'id = :',
-      whereArgs: [id],
-    );
+  // Atualizar um sensor no banco de dados
+  // Future<int> updateSensor(Map<String, dynamic> sensorData, int id) async {
+  //   Database db = await database;
+  //   return await db.update(
+  //     _tableName,
+  //     sensorData,
+  //     where: 'id = ?',
+  //     whereArgs: [id],
+  //   );
+  // }
+
+  // Future<int> updateSensor(Map<String, dynamic> sensorData, int id) async {
+  //   Database db = await database;
+  //   return await db.update(
+  //     _tableName,
+  //     sensorData,
+  //     where: 'id = ?',
+  //     whereArgs: [id],
+  //   );
+  // }
+
+  // Future<int> updateSensor(Map<String, dynamic> sensor) async {
+  //   Database db = await database;
+  //   return await db.update(
+  //     'sensors',
+  //     sensor,
+  //     where: 'id = ?',
+  //     whereArgs: [sensor['id']],
+  //   );
+  // }
+
+  
+
+  // Future<int> updateSensor(Sensor sensor) async {
+  //   Database db = await database;
+  //   return await db.update(
+  //     _tableName,
+  //     sensor.toMap(), // Converte o objeto Sensor para um Map
+  //     where: 'id = ?',
+  //     whereArgs: [sensor.id],
+  //   );
+  // }
+
+  Future<int> updateSensor(Sensor sensor) async {
+  Database db = await database;
+  return await db.update(
+    _tableName,
+    sensor.toMap(), // Converte o objeto Sensor para um Map
+    where: 'id = ?',
+    whereArgs: [sensor.id],
+   );
   }
 
-  // DELETE
-  // Metódo que exclui um sensor através do ID (apaga sensor especifico)
+
+
+
+  // Excluir um sensor pelo ID
   Future<int> deleteSensor(int id) async {
     Database db = await database;
     return await db.delete(
@@ -103,9 +137,7 @@ class DatabaseHelper {
     );
   }
 
-  // READ
-  // Metodo que cria uma lista com todos os sensores (obtem todos os sensores)
-
+  // Obter todos os sensores
   Future<List<Sensor>> getAllSensors() async {
     Database db = await database;
     final List<Map<String, dynamic>> maps = await db.query(_tableName);
@@ -115,8 +147,7 @@ class DatabaseHelper {
     });
   }
 
-  // READ DE UM ESPEFICO
-  // Metódo que lista um sensor espefico através do ID
+  // Obter um sensor pelo ID
   Future<Sensor?> getSensorById(int id) async {
     Database db = await database;
     List<Map<String, dynamic>> result = await db.query(
